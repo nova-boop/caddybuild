@@ -1,0 +1,2 @@
+# caddybuild
+caddy build auto
