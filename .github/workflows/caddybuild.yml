@@ -94,6 +94,7 @@ jobs:
       run: |
         cd ./release-tmp || exit 1
         sha256sum * > sha256
+        echo "HASHES=$(cat sha256)" >> $GITHUB_ENV
         cat sha256
 
     - name: Archive build artifacts
@@ -111,12 +112,6 @@ jobs:
       with:
         name: caddy-${{ matrix.config.name }}
         path: ./release-ready/*
-
-    - name: Organize Files
-      if: always()
-      run: |
-        cd ./release-tmp
-        echo "HASHES=$(cat sha256)" >> $GITHUB_ENV
 
     - name: Upload Firmware To Release
       if: github.event_name == 'release'
