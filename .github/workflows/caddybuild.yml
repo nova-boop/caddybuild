@@ -26,46 +26,32 @@ jobs:
         - { name: "linux-armv5", GOARCH: arm, GOARM: 5, GOOS: linux, release: true }
         - { name: "linux-s390x", GOARCH: s390x, GOOS: linux, release: true }
         - { name: "freebsd-amd64", GOARCH: amd64, GOOS: freebsd, release: true }
-        - { name: "freebsd-arm64", GOARCH: arm64, GOOS: linux, release: true }
+        - { name: "freebsd-arm64", GOARCH: arm64, GOOS: freebsd, release: true }
         - { name: "darwin-amd64", GOARCH: amd64, GOOS: darwin, release: true }
         - { name: "darwin-arm64", GOARCH: arm64, GOOS: darwin, release: true }
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v3 # 将自动切换到 Node.js 20
 
     - name: Set up Go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@v3 # 将自动切换到 Node.js 20
       with:
         go-version: '1.21.1'
         check-latest: true
 
     - name: Cache Go modules
-      uses: actions/cache@v3
+      uses: actions/cache@v3 # 将自动切换到 Node.js 20
       with:
         path: ~/go/pkg/mod
         key: ${{ runner.os }}-go-${{ matrix.config.GOARCH }}-modules-${{ hashFiles('**/go.sum') }}
         restore-keys: |
           ${{ runner.os }}-go-${{ matrix.config.GOARCH }}-modules-
 
-    - name: Set up Android NDK
-      if: matrix.config.GOOS == 'android'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y wget unzip
-        wget https://dl.google.com/android/repository/android-ndk-r21e-linux-x86_64.zip
-        unzip android-ndk-r21e-linux-x86_64.zip
-        export ANDROID_NDK_HOME=$PWD/android-ndk-r21e
-        export PATH=$PATH:$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin
-
     - name: Install xcaddy
       run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
 
     - name: Build caddy
-      env:
-        CC: armv7a-linux-androideabi21-clang
-        CXX: armv7a-linux-androideabi21-clang++
-        CGO_ENABLED: 1
       run: |
         mkdir -p release-tmp
         export GOARCH=${{ matrix.config.GOARCH }} 
@@ -122,7 +108,7 @@ jobs:
         fi
 
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3 # 将自动切换到 Node.js 20
       with:
         name: caddy-${{ github.sha }}-${{ matrix.config.name }}
         path: ./release-ready/*
