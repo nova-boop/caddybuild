@@ -19,16 +19,16 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - { name: "windows-386", GOARCH: 386, GOOS: windows, release: true }
-        - { name: "windows-amd64", GOARCH: amd64, GOOS: windows, release: true }
-        - { name: "linux-amd64", GOARCH: amd64, GOOS: linux, release: true }
-        - { name: "linux-arm64", GOARCH: arm64, GOOS: linux, release: true }
-        - { name: "linux-armv5", GOARCH: arm, GOARM: 5, GOOS: linux, release: true }
-        - { name: "linux-s390x", GOARCH: s390x, GOOS: linux, release: true }
-        - { name: "freebsd-amd64", GOARCH: amd64, GOOS: freebsd, release: true }
-        - { name: "freebsd-arm64", GOARCH: arm64, GOOS: freebsd, release: true }
-        - { name: "darwin-amd64", GOARCH: amd64, GOOS: darwin, release: true }
-        - { name: "darwin-arm64", GOARCH: arm64, GOOS: darwin, release: true }
+        - { name: "windows-386", GOARCH: 386, GOOS: windows }
+        - { name: "windows-amd64", GOARCH: amd64, GOOS: windows }
+        - { name: "linux-amd64", GOARCH: amd64, GOOS: linux }
+        - { name: "linux-arm64", GOARCH: arm64, GOOS: linux }
+        - { name: "linux-armv5", GOARCH: arm, GOARM: 5, GOOS: linux }
+        - { name: "linux-s390x", GOARCH: s390x, GOOS: linux }
+        - { name: "freebsd-amd64", GOARCH: amd64, GOOS: freebsd }
+        - { name: "freebsd-arm64", GOARCH: arm64, GOOS: freebsd }
+        - { name: "darwin-amd64", GOARCH: amd64, GOOS: darwin }
+        - { name: "darwin-arm64", GOARCH: arm64, GOOS: darwin }
 
     steps:
     - name: Checkout
@@ -38,7 +38,6 @@ jobs:
       uses: actions/setup-go@v3
       with:
         go-version: '1.21.1'
-        check-latest: true
 
     - name: Cache Go modules
       uses: actions/cache@v3
@@ -113,27 +112,13 @@ jobs:
         name: caddy-${{ github.sha }}-${{ matrix.config.name }}
         path: ./release-ready/*
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      if: github.event_name == 'release' && matrix.config.release
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        body: >
-          Release for ${{ github.ref }} - ${{ matrix.config.name }}
-        draft: false
-        prerelease: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
-      if: github.event_name == 'release' && matrix.config.release
+      if: github.event_name == 'release'
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        upload_url: ${{ github.event.release.upload_url }}
         asset_path: ./release-ready/*${{ matrix.config.name }}.*
-        asset_name: caddy-${{ matrix.config.name }}-${{ github.sha }}
-        asset_content_type: application/octet-stream
+        asset_name: caddy-${{ matrix.config.name }}-${{ github.sha }}.tar.gz
+        asset_content_type: application/gzip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
