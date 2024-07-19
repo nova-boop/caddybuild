@@ -2,13 +2,11 @@ name: Build caddy
 
 on:
   workflow_dispatch:
-
   release:
     types:
-      - 'prereleased'
-      - 'published'
-      - 'released'
-
+      - prereleased
+      - published
+      - released
   schedule:
     - cron: '0 3 * * *'
 
@@ -92,9 +90,11 @@ jobs:
       run: mv ./release-tmp/caddy ./release-tmp/caddy.exe
 
     - name: Calculate Hash
+      id: calculate_hash
       run: |
         cd ./release-tmp || exit 1
         sha256sum * > sha256
+        cat sha256
 
     - name: Archive build artifacts
       run: |
@@ -112,13 +112,24 @@ jobs:
         name: caddy-${{ github.sha }}-${{ matrix.config.name }}
         path: ./release-ready/*
 
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
+    - name: Organize Files
+      if: always()
+      run: |
+        cd ./release-tmp
+        echo "HASHES=$(cat sha256)" >> $GITHUB_ENV
+
+    - name: Upload Firmware To Release
       if: github.event_name == 'release'
+      uses: ncipollo/release-action@v1
       with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./release-ready/*${{ matrix.config.name }}.*
-        asset_name: caddy-${{ matrix.config.name }}-${{ github.sha }}.tar.gz
-        asset_content_type: application/gzip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: ${{ github.event.release.tag_name }}
+        allowUpdates: true
+        tag: ${{ github.event.release.tag_name }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        artifacts: ./release-ready/*
+        body: |
+          **This is the Caddy build for ${{ github.event.release.tag_name }}**
+          ### 📒 Hash Information
+          ```
+          ${{ env.HASHES }}
+          ```
