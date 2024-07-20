@@ -23,6 +23,7 @@ jobs:
       - name: Build Caddy
         run: |
           go get github.com/caddyserver/xcaddy/cmd/xcaddy
+          go mod edit -replace github.com/caddyserver/caddy/v2=github.com/caddyserver/caddy/v2@v2.4.0
           xcaddy build \
             --with github.com/WeidiDeng/caddy-cloudflare-ip \
             --with github.com/mholt/caddy-grpc-web \
