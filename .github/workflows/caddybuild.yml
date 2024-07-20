@@ -2,14 +2,19 @@ name: Build and Release Caddy
 
 on:
   schedule:
-    - cron: "0 3 * * *"
+    - cron: '0 3 * * *' # 每天凌晨 3 点
   push:
-    branches:
-      - main
+    tags:
+      - 'v*' # 也可以在推送标签时触发
+  workflow_dispatch: # 允许手动触发
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, windows-latest, macos-latest] # 这里定义要编译的操作系统
+        arch: [amd64, arm64] # 这里定义要编译的架构（适用于 macOS）
 
     steps:
       - name: Checkout code
@@ -18,12 +23,13 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.17
+          go-version: '1.20' # 使用合适的 Go 版本
+
+      - name: Install xcaddy
+        run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
 
       - name: Build Caddy
         run: |
-          go get github.com/caddyserver/xcaddy/cmd/xcaddy
-          go mod edit -replace github.com/caddyserver/caddy/v2=github.com/caddyserver/caddy/v2@v2.4.0
           xcaddy build \
             --with github.com/WeidiDeng/caddy-cloudflare-ip \
             --with github.com/mholt/caddy-grpc-web \
@@ -53,68 +59,37 @@ jobs:
             --with github.com/caddy-dns/powerdns \
             --with github.com/caddy-dns/tencentcloud \
             --with github.com/aksdb/caddy-cgi/v2 \
-            --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive \
-            --output caddy
+            --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive
 
-      - name: Create release
+      - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ github.run_number }} # 使用运行编号作为版本标签
+          files: |
+            caddy
+            caddy.exe
+            caddy-darwin-amd64
+            caddy-darwin-arm64
+            caddy-linux-amd64
+            caddy-linux-arm64
+            caddy-windows-amd64.exe
+            caddy-android-arm64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v1.0.0
-          release_name: Release v1.0.0
-          body: |
-            This is the first release of Caddy compiled with the specified plugins.
-          draft: false
-          prerelease: false
 
-      - name: Upload binaries
-        uses: actions/upload-release-asset@v1
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ github.run_number }}
+          files: |
+            caddy
+            caddy.exe
+            caddy-darwin-amd64
+            caddy-darwin-arm64
+            caddy-linux-amd64
+            caddy-linux-arm64
+            caddy-windows-amd64.exe
+            caddy-android-arm64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./caddy
-          asset_name: caddy-linux-amd64
-          asset_content_type: application/octet-stream
-
-      - name: Upload binaries
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./caddy.exe
-          asset_name: caddy-windows-amd64.exe
-          asset_content_type: application/octet-stream
-
-      - name: Upload binaries
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./caddy-darwin-amd64
-          asset_name: caddy-darwin-amd64
-          asset_content_type: application/octet-stream
-
-      - name: Upload binaries
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./caddy-darwin-arm64
-          asset_name: caddy-darwin-arm64
-          asset_content_type: application/octet-stream
-
-      - name: Upload binaries
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./caddy-android-amd64
-          asset_name: caddy-android-amd64
-          asset_content_type: application/octet-stream
