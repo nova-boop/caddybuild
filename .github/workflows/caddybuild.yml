@@ -10,12 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-20.04, windows-latest, macos-latest]
-        arch: [amd64, arm64]
-
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v3 # 更新到最新版本
@@ -23,118 +18,78 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3 # 更新到最新版本
         with:
-          go-version: '1.20' # 使用合适的 Go 版本
+          go-version: '1.21.1' # 使用 Go 1.21.1
 
       - name: Install xcaddy
         run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
 
+      - name: Define plugins
+        id: define-plugins
+        run: echo "PLUGINS='--with github.com/WeidiDeng/caddy-cloudflare-ip \
+              --with github.com/mholt/caddy-grpc-web \
+              --with github.com/greenpau/caddy-git \
+              --with github.com/mholt/caddy-webdav \
+              --with github.com/WingLim/caddy-webhook \
+              --with github.com/mholt/caddy-ratelimit \
+              --with github.com/caddyserver/ntlm-transport \
+              --with github.com/lolPants/caddy-requestid \
+              --with github.com/sjtug/caddy2-filter \
+              --with github.com/chukmunnlee/caddy-openapi \
+              --with github.com/ggicci/caddy-jwt \
+              --with github.com/caddy-dns/cloudflare \
+              --with github.com/libdns/cloudflare \
+              --with github.com/caddy-dns/route53 \
+              --with github.com/caddy-dns/duckdns \
+              --with github.com/caddy-dns/dnspod \
+              --with github.com/caddy-dns/digitalocean \
+              --with github.com/caddy-dns/alidns \
+              --with github.com/caddy-dns/godaddy \
+              --with github.com/caddy-dns/vultr \
+              --with github.com/caddy-dns/googleclouddns \
+              --with github.com/caddy-dns/ovh \
+              --with github.com/caddy-dns/metaname \
+              --with github.com/caddy-dns/ddnss \
+              --with github.com/caddy-dns/dinahosting \
+              --with github.com/caddy-dns/powerdns \
+              --with github.com/caddy-dns/tencentcloud \
+              --with github.com/aksdb/caddy-cgi/v2 \
+              --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive'" >> $GITHUB_ENV
+
       - name: Build Caddy for Linux amd64
-        if: matrix.os == 'ubuntu-20.04' && matrix.arch == 'amd64'
         run: |
           export GOOS=linux
           export GOARCH=amd64
-          xcaddy build \
-            --with github.com/WeidiDeng/caddy-cloudflare-ip \
-            --with github.com/mholt/caddy-grpc-web \
-            --with github.com/greenpau/caddy-git \
-            --with github.com/mholt/caddy-webdav \
-            --with github.com/WingLim/caddy-webhook \
-            --with github.com/mholt/caddy-ratelimit \
-            --with github.com/caddyserver/ntlm-transport \
-            --with github.com/lolPants/caddy-requestid \
-            --with github.com/sjtug/caddy2-filter \
-            --with github.com/chukmunnlee/caddy-openapi \
-            --with github.com/ggicci/caddy-jwt \
-            --with github.com/caddy-dns/cloudflare \
-            --with github.com/libdns/cloudflare \
-            --with github.com/caddy-dns/route53 \
-            --with github.com/caddy-dns/duckdns \
-            --with github.com/caddy-dns/dnspod \
-            --with github.com/caddy-dns/digitalocean \
-            --with github.com/caddy-dns/alidns \
-            --with github.com/caddy-dns/godaddy \
-            --with github.com/caddy-dns/vultr \
-            --with github.com/caddy-dns/googleclouddns \
-            --with github.com/caddy-dns/ovh \
-            --with github.com/caddy-dns/metaname \
-            --with github.com/caddy-dns/ddnss \
-            --with github.com/caddy-dns/dinahosting \
-            --with github.com/caddy-dns/powerdns \
-            --with github.com/caddy-dns/tencentcloud \
-            --with github.com/aksdb/caddy-cgi/v2 \
-            --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive
+          xcaddy build v2.8.4 $PLUGINS --output ./caddy_linux_amd64
 
-      - name: Build Caddy for Windows amd64
-        if: matrix.os == 'windows-latest' && matrix.arch == 'amd64'
+      - name: Build Caddy for Linux arm64
         run: |
-          set GOOS=windows
-          set GOARCH=amd64
-          xcaddy build \
-            --with github.com/WeidiDeng/caddy-cloudflare-ip \
-            --with github.com/mholt/caddy-grpc-web \
-            --with github.com/greenpau/caddy-git \
-            --with github.com/mholt/caddy-webdav \
-            --with github.com/WingLim/caddy-webhook \
-            --with github.com/mholt/caddy-ratelimit \
-            --with github.com/caddyserver/ntlm-transport \
-            --with github.com/lolPants/caddy-requestid \
-            --with github.com/sjtug/caddy2-filter \
-            --with github.com/chukmunnlee/caddy-openapi \
-            --with github.com/ggicci/caddy-jwt \
-            --with github.com/caddy-dns/cloudflare \
-            --with github.com/libdns/cloudflare \
-            --with github.com/caddy-dns/route53 \
-            --with github.com/caddy-dns/duckdns \
-            --with github.com/caddy-dns/dnspod \
-            --with github.com/caddy-dns/digitalocean \
-            --with github.com/caddy-dns/alidns \
-            --with github.com/caddy-dns/godaddy \
-            --with github.com/caddy-dns/vultr \
-            --with github.com/caddy-dns/googleclouddns \
-            --with github.com/caddy-dns/ovh \
-            --with github.com/caddy-dns/metaname \
-            --with github.com/caddy-dns/ddnss \
-            --with github.com/caddy-dns/dinahosting \
-            --with github.com/caddy-dns/powerdns \
-            --with github.com/caddy-dns/tencentcloud \
-            --with github.com/aksdb/caddy-cgi/v2 \
-            --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive
+          export GOOS=linux
+          export GOARCH=arm64
+          xcaddy build v2.8.4 $PLUGINS --output ./caddy_linux_arm64
+
+      - name: Build Caddy for Linux arm
+        run: |
+          export GOOS=linux
+          export GOARCH=arm
+          xcaddy build v2.8.4 $PLUGINS --output ./caddy_linux_arm
+
+      - name: Build Caddy for Android arm
+        run: |
+          export GOOS=android
+          export GOARCH=arm
+          xcaddy build v2.8.4 $PLUGINS --output ./caddy_android_arm
 
       - name: Build Caddy for macOS amd64
-        if: matrix.os == 'macos-latest' && matrix.arch == 'amd64'
         run: |
           export GOOS=darwin
           export GOARCH=amd64
-          xcaddy build \
-            --with github.com/WeidiDeng/caddy-cloudflare-ip \
-            --with github.com/mholt/caddy-grpc-web \
-            --with github.com/greenpau/caddy-git \
-            --with github.com/mholt/caddy-webdav \
-            --with github.com/WingLim/caddy-webhook \
-            --with github.com/mholt/caddy-ratelimit \
-            --with github.com/caddyserver/ntlm-transport \
-            --with github.com/lolPants/caddy-requestid \
-            --with github.com/sjtug/caddy2-filter \
-            --with github.com/chukmunnlee/caddy-openapi \
-            --with github.com/ggicci/caddy-jwt \
-            --with github.com/caddy-dns/cloudflare \
-            --with github.com/libdns/cloudflare \
-            --with github.com/caddy-dns/route53 \
-            --with github.com/caddy-dns/duckdns \
-            --with github.com/caddy-dns/dnspod \
-            --with github.com/caddy-dns/digitalocean \
-            --with github.com/caddy-dns/alidns \
-            --with github.com/caddy-dns/godaddy \
-            --with github.com/caddy-dns/vultr \
-            --with github.com/caddy-dns/googleclouddns \
-            --with github.com/caddy-dns/ovh \
-            --with github.com/caddy-dns/metaname \
-            --with github.com/caddy-dns/ddnss \
-            --with github.com/caddy-dns/dinahosting \
-            --with github.com/caddy-dns/powerdns \
-            --with github.com/caddy-dns/tencentcloud \
-            --with github.com/aksdb/caddy-cgi/v2 \
-            --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive
+          xcaddy build v2.8.4 $PLUGINS --output ./caddy_darwin_amd64
+
+      - name: Build Caddy for Windows amd64
+        run: |
+          export GOOS=windows
+          export GOARCH=amd64
+          xcaddy build v2.8.4 $PLUGINS --output ./caddy_windows_amd64.exe
 
       - name: Create Release
         id: create_release
@@ -142,14 +97,12 @@ jobs:
         with:
           tag_name: v${{ github.run_number }}
           files: |
-            caddy
-            caddy.exe
-            caddy-darwin-amd64
-            caddy-darwin-arm64
-            caddy-linux-amd64
-            caddy-linux-arm64
-            caddy-windows-amd64.exe
-            caddy-android-arm64
+            ./caddy_linux_amd64
+            ./caddy_linux_arm64
+            ./caddy_linux_arm
+            ./caddy_android_arm
+            ./caddy_darwin_amd64
+            ./caddy_windows_amd64.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -158,13 +111,11 @@ jobs:
         with:
           tag_name: v${{ github.run_number }}
           files: |
-            caddy
-            caddy.exe
-            caddy-darwin-amd64
-            caddy-darwin-arm64
-            caddy-linux-amd64
-            caddy-linux-arm64
-            caddy-windows-amd64.exe
-            caddy-android-arm64
+            ./caddy_linux_amd64
+            ./caddy_linux_arm64
+            ./caddy_linux_arm
+            ./caddy_android_arm
+            ./caddy_darwin_amd64
+            ./caddy_windows_amd64.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
