@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, windows-latest, macos-latest] # 这里定义要编译的操作系统
-        arch: [amd64, arm64] # 这里定义要编译的架构（适用于 macOS）
+        arch: [amd64, arm64] # 这里定义要编译的架构（适用于 macOS 和 Linux）
 
     steps:
       - name: Checkout code
@@ -30,36 +30,131 @@ jobs:
 
       - name: Build Caddy
         run: |
-          xcaddy build \
-            --with github.com/WeidiDeng/caddy-cloudflare-ip \
-            --with github.com/mholt/caddy-grpc-web \
-            --with github.com/greenpau/caddy-git \
-            --with github.com/mholt/caddy-webdav \
-            --with github.com/WingLim/caddy-webhook \
-            --with github.com/mholt/caddy-ratelimit \
-            --with github.com/caddyserver/ntlm-transport \
-            --with github.com/lolPants/caddy-requestid \
-            --with github.com/sjtug/caddy2-filter \
-            --with github.com/chukmunnlee/caddy-openapi \
-            --with github.com/ggicci/caddy-jwt \
-            --with github.com/caddy-dns/cloudflare \
-            --with github.com/libdns/cloudflare \
-            --with github.com/caddy-dns/route53 \
-            --with github.com/caddy-dns/duckdns \
-            --with github.com/caddy-dns/dnspod \
-            --with github.com/caddy-dns/digitalocean \
-            --with github.com/caddy-dns/alidns \
-            --with github.com/caddy-dns/godaddy \
-            --with github.com/caddy-dns/vultr \
-            --with github.com/caddy-dns/googleclouddns \
-            --with github.com/caddy-dns/ovh \
-            --with github.com/caddy-dns/metaname \
-            --with github.com/caddy-dns/ddnss \
-            --with github.com/caddy-dns/dinahosting \
-            --with github.com/caddy-dns/powerdns \
-            --with github.com/caddy-dns/tencentcloud \
-            --with github.com/aksdb/caddy-cgi/v2 \
-            --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive
+          if [[ "${{ matrix.os }}" == "macos-latest" && "${{ matrix.arch }}" == "amd64" ]]; then
+            xcaddy build \
+              --with github.com/WeidiDeng/caddy-cloudflare-ip \
+              --with github.com/mholt/caddy-grpc-web \
+              --with github.com/greenpau/caddy-git \
+              --with github.com/mholt/caddy-webdav \
+              --with github.com/WingLim/caddy-webhook \
+              --with github.com/mholt/caddy-ratelimit \
+              --with github.com/caddyserver/ntlm-transport \
+              --with github.com/lolPants/caddy-requestid \
+              --with github.com/sjtug/caddy2-filter \
+              --with github.com/chukmunnlee/caddy-openapi \
+              --with github.com/ggicci/caddy-jwt \
+              --with github.com/caddy-dns/cloudflare \
+              --with github.com/libdns/cloudflare \
+              --with github.com/caddy-dns/route53 \
+              --with github.com/caddy-dns/duckdns \
+              --with github.com/caddy-dns/dnspod \
+              --with github.com/caddy-dns/digitalocean \
+              --with github.com/caddy-dns/alidns \
+              --with github.com/caddy-dns/godaddy \
+              --with github.com/caddy-dns/vultr \
+              --with github.com/caddy-dns/googleclouddns \
+              --with github.com/caddy-dns/ovh \
+              --with github.com/caddy-dns/metaname \
+              --with github.com/caddy-dns/ddnss \
+              --with github.com/caddy-dns/dinahosting \
+              --with github.com/caddy-dns/powerdns \
+              --with github.com/caddy-dns/tencentcloud \
+              --with github.com/aksdb/caddy-cgi/v2 \
+              --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive
+          elif [[ "${{ matrix.os }}" == "macos-latest" && "${{ matrix.arch }}" == "arm64" ]]; then
+            xcaddy build \
+              --with github.com/WeidiDeng/caddy-cloudflare-ip \
+              --with github.com/mholt/caddy-grpc-web \
+              --with github.com/greenpau/caddy-git \
+              --with github.com/mholt/caddy-webdav \
+              --with github.com/WingLim/caddy-webhook \
+              --with github.com/mholt/caddy-ratelimit \
+              --with github.com/caddyserver/ntlm-transport \
+              --with github.com/lolPants/caddy-requestid \
+              --with github.com/sjtug/caddy2-filter \
+              --with github.com/chukmunnlee/caddy-openapi \
+              --with github.com/ggicci/caddy-jwt \
+              --with github.com/caddy-dns/cloudflare \
+              --with github.com/libdns/cloudflare \
+              --with github.com/caddy-dns/route53 \
+              --with github.com/caddy-dns/duckdns \
+              --with github.com/caddy-dns/dnspod \
+              --with github.com/caddy-dns/digitalocean \
+              --with github.com/caddy-dns/alidns \
+              --with github.com/caddy-dns/godaddy \
+              --with github.com/caddy-dns/vultr \
+              --with github.com/caddy-dns/googleclouddns \
+              --with github.com/caddy-dns/ovh \
+              --with github.com/caddy-dns/metaname \
+              --with github.com/caddy-dns/ddnss \
+              --with github.com/caddy-dns/dinahosting \
+              --with github.com/caddy-dns/powerdns \
+              --with github.com/caddy-dns/tencentcloud \
+              --with github.com/aksdb/caddy-cgi/v2 \
+              --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive
+          elif [[ "${{ matrix.os }}" == "linux" ]]; then
+            xcaddy build \
+              --with github.com/WeidiDeng/caddy-cloudflare-ip \
+              --with github.com/mholt/caddy-grpc-web \
+              --with github.com/greenpau/caddy-git \
+              --with github.com/mholt/caddy-webdav \
+              --with github.com/WingLim/caddy-webhook \
+              --with github.com/mholt/caddy-ratelimit \
+              --with github.com/caddyserver/ntlm-transport \
+              --with github.com/lolPants/caddy-requestid \
+              --with github.com/sjtug/caddy2-filter \
+              --with github.com/chukmunnlee/caddy-openapi \
+              --with github.com/ggicci/caddy-jwt \
+              --with github.com/caddy-dns/cloudflare \
+              --with github.com/libdns/cloudflare \
+              --with github.com/caddy-dns/route53 \
+              --with github.com/caddy-dns/duckdns \
+              --with github.com/caddy-dns/dnspod \
+              --with github.com/caddy-dns/digitalocean \
+              --with github.com/caddy-dns/alidns \
+              --with github.com/caddy-dns/godaddy \
+              --with github.com/caddy-dns/vultr \
+              --with github.com/caddy-dns/googleclouddns \
+              --with github.com/caddy-dns/ovh \
+              --with github.com/caddy-dns/metaname \
+              --with github.com/caddy-dns/ddnss \
+              --with github.com/caddy-dns/dinahosting \
+              --with github.com/caddy-dns/powerdns \
+              --with github.com/caddy-dns/tencentcloud \
+              --with github.com/aksdb/caddy-cgi/v2 \
+              --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive
+          elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            xcaddy build \
+              --with github.com/WeidiDeng/caddy-cloudflare-ip \
+              --with github.com/mholt/caddy-grpc-web \
+              --with github.com/greenpau/caddy-git \
+              --with github.com/mholt/caddy-webdav \
+              --with github.com/WingLim/caddy-webhook \
+              --with github.com/mholt/caddy-ratelimit \
+              --with github.com/caddyserver/ntlm-transport \
+              --with github.com/lolPants/caddy-requestid \
+              --with github.com/sjtug/caddy2-filter \
+              --with github.com/chukmunnlee/caddy-openapi \
+              --with github.com/ggicci/caddy-jwt \
+              --with github.com/caddy-dns/cloudflare \
+              --with github.com/libdns/cloudflare \
+              --with github.com/caddy-dns/route53 \
+              --with github.com/caddy-dns/duckdns \
+              --with github.com/caddy-dns/dnspod \
+              --with github.com/caddy-dns/digitalocean \
+              --with github.com/caddy-dns/alidns \
+              --with github.com/caddy-dns/godaddy \
+              --with github.com/caddy-dns/vultr \
+              --with github.com/caddy-dns/googleclouddns \
+              --with github.com/caddy-dns/ovh \
+              --with github.com/caddy-dns/metaname \
+              --with github.com/caddy-dns/ddnss \
+              --with github.com/caddy-dns/dinahosting \
+              --with github.com/caddy-dns/powerdns \
+              --with github.com/caddy-dns/tencentcloud \
+              --with github.com/aksdb/caddy-cgi/v2 \
+              --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive
+          fi
 
       - name: Create Release
         id: create_release
