@@ -1,130 +1,119 @@
-name: Build caddy
+name: Build and Release Caddy
 
 on:
-  workflow_dispatch:
-  release:
-    types:
-      - prereleased
-      - published
-      - released
   schedule:
-    - cron: '0 3 * * *'
+    - cron: "0 3 * * *"
+  push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-        - { name: "windows-386", GOARCH: 386, GOOS: windows }
-        - { name: "windows-amd64", GOARCH: amd64, GOOS: windows }
-        - { name: "linux-amd64", GOARCH: amd64, GOOS: linux }
-        - { name: "linux-arm64", GOARCH: arm64, GOOS: linux }
-        - { name: "linux-armv5", GOARCH: arm, GOARM: 5, GOOS: linux }
-        - { name: "linux-s390x", GOARCH: s390x, GOOS: linux }
-        - { name: "freebsd-amd64", GOARCH: amd64, GOOS: freebsd }
-        - { name: "freebsd-arm64", GOARCH: arm64, GOOS: freebsd }
-        - { name: "darwin-amd64", GOARCH: amd64, GOOS: darwin }
-        - { name: "darwin-arm64", GOARCH: arm64, GOOS: darwin }
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@main
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Go
-      uses: actions/setup-go@main
-      with:
-        go-version: '1.21.1'
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
 
-    - name: Cache Go modules
-      uses: actions/cache@main
-      with:
-        path: ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ matrix.config.GOARCH }}-modules-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-${{ matrix.config.GOARCH }}-modules-
+      - name: Build Caddy
+        run: |
+          go get github.com/caddyserver/xcaddy/cmd/xcaddy
+          xcaddy build \
+            --with github.com/WeidiDeng/caddy-cloudflare-ip \
+            --with github.com/mholt/caddy-grpc-web \
+            --with github.com/greenpau/caddy-git \
+            --with github.com/mholt/caddy-webdav \
+            --with github.com/WingLim/caddy-webhook \
+            --with github.com/mholt/caddy-ratelimit \
+            --with github.com/caddyserver/ntlm-transport \
+            --with github.com/lolPants/caddy-requestid \
+            --with github.com/sjtug/caddy2-filter \
+            --with github.com/chukmunnlee/caddy-openapi \
+            --with github.com/ggicci/caddy-jwt \
+            --with github.com/caddy-dns/cloudflare \
+            --with github.com/libdns/cloudflare \
+            --with github.com/caddy-dns/route53 \
+            --with github.com/caddy-dns/duckdns \
+            --with github.com/caddy-dns/dnspod \
+            --with github.com/caddy-dns/digitalocean \
+            --with github.com/caddy-dns/alidns \
+            --with github.com/caddy-dns/godaddy \
+            --with github.com/caddy-dns/vultr \
+            --with github.com/caddy-dns/googleclouddns \
+            --with github.com/caddy-dns/ovh \
+            --with github.com/caddy-dns/metaname \
+            --with github.com/caddy-dns/ddnss \
+            --with github.com/caddy-dns/dinahosting \
+            --with github.com/caddy-dns/powerdns \
+            --with github.com/caddy-dns/tencentcloud \
+            --with github.com/aksdb/caddy-cgi/v2 \
+            --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive \
+            --output caddy
 
-    - name: Install xcaddy
-      run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v1.0.0
+          release_name: Release v1.0.0
+          body: |
+            This is the first release of Caddy compiled with the specified plugins.
+          draft: false
+          prerelease: false
 
-    - name: Build caddy
-      run: |
-        mkdir -p release-tmp
-        export GOARCH=${{ matrix.config.GOARCH }}
-        export GOOS=${{ matrix.config.GOOS }}
-        ~/go/bin/xcaddy build \
-          --with github.com/WeidiDeng/caddy-cloudflare-ip \
-          --with github.com/mholt/caddy-grpc-web \
-          --with github.com/greenpau/caddy-git \
-          --with github.com/mholt/caddy-webdav \
-          --with github.com/WingLim/caddy-webhook \
-          --with github.com/mholt/caddy-ratelimit \
-          --with github.com/caddyserver/ntlm-transport \
-          --with github.com/lolPants/caddy-requestid \
-          --with github.com/sjtug/caddy2-filter \
-          --with github.com/chukmunnlee/caddy-openapi \
-          --with github.com/ggicci/caddy-jwt \
-          --with github.com/caddy-dns/cloudflare \
-          --with github.com/libdns/cloudflare \
-          --with github.com/caddy-dns/route53 \
-          --with github.com/caddy-dns/duckdns \
-          --with github.com/caddy-dns/dnspod \
-          --with github.com/caddy-dns/digitalocean \
-          --with github.com/caddy-dns/alidns \
-          --with github.com/caddy-dns/godaddy \
-          --with github.com/caddy-dns/vultr \
-          --with github.com/caddy-dns/googleclouddns \
-          --with github.com/caddy-dns/ovh \
-          --with github.com/caddy-dns/metaname \
-          --with github.com/caddy-dns/ddnss \
-          --with github.com/caddy-dns/dinahosting \
-          --with github.com/caddy-dns/powerdns \
-          --with github.com/caddy-dns/tencentcloud \
-          --with github.com/aksdb/caddy-cgi/v2 \
-          --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive \
-          --output ./release-tmp/caddy
+      - name: Upload binaries
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./caddy
+          asset_name: caddy-linux-amd64
+          asset_content_type: application/octet-stream
 
-    - name: Rename for Windows
-      if: matrix.config.GOOS == 'windows'
-      run: mv ./release-tmp/caddy ./release-tmp/caddy.exe
+      - name: Upload binaries
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./caddy.exe
+          asset_name: caddy-windows-amd64.exe
+          asset_content_type: application/octet-stream
 
-    - name: Calculate Hash
-      id: calculate_hash
-      run: |
-        cd ./release-tmp || exit 1
-        sha256sum * > sha256
-        echo "HASHES=$(cat sha256)" >> $GITHUB_ENV
-        cat sha256
+      - name: Upload binaries
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./caddy-darwin-amd64
+          asset_name: caddy-darwin-amd64
+          asset_content_type: application/octet-stream
 
-    - name: Archive build artifacts
-      run: |
-        mkdir -p release-ready
-        cd ./release-tmp
-        if [ "${{ matrix.config.GOOS }}" == "windows" ]; then
-          zip -r ../release-ready/caddy-${{ matrix.config.name }}.zip *
-        else
-          tar -zcvf ../release-ready/caddy-${{ matrix.config.name }}.tar.gz *
-        fi
+      - name: Upload binaries
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./caddy-darwin-arm64
+          asset_name: caddy-darwin-arm64
+          asset_content_type: application/octet-stream
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@main
-      with:
-        name: caddy-${{ matrix.config.name }}
-        path: ./release-ready/*
-
-    - name: Upload Firmware To Release
-      if: github.event_name == 'release'
-      uses: ncipollo/release-action@v1
-      with:
-        name: ${{ github.event.release.tag_name }}
-        allowUpdates: true
-        tag: ${{ github.event.release.tag_name }}
-        token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: ./release-ready/*
-        body: |
-          **This is the Caddy build for ${{ github.event.release.tag_name }}**
-          ### 📒 Hash Information
-          ```
-          ${{ env.HASHES }}
-          ```
+      - name: Upload binaries
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./caddy-android-amd64
+          asset_name: caddy-android-amd64
+          asset_content_type: application/octet-stream
