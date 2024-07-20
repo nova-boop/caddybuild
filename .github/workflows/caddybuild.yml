@@ -8,6 +8,10 @@ on:
       - 'v*' # 也可以在推送标签时触发
   workflow_dispatch: # 允许手动触发
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -215,7 +219,7 @@ jobs:
             ./caddy_darwin_amd64
             ./caddy_windows_amd64.exe
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 确保此处的 token 具备足够权限
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
@@ -228,4 +232,4 @@ jobs:
             ./caddy_darwin_amd64
             ./caddy_windows_amd64.exe
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 确保此处的 token 具备足够权限
