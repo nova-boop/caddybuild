@@ -256,7 +256,7 @@ jobs:
             ./caddy_darwin_arm64
             ./caddy_windows_amd64.exe
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 确保此处的 token 具备足够权限
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
@@ -271,4 +271,4 @@ jobs:
             ./caddy_darwin_arm64
             ./caddy_windows_amd64.exe
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 确保此处的 token 具备足够权限
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
