@@ -2,11 +2,11 @@ name: Build and Release Caddy
 
 on:
   schedule:
-    - cron: '0 3 * * *' # 每天凌晨 3 点
+    - cron: '0 3 * * *'
   push:
     tags:
-      - 'v*' # 也可以在推送标签时触发
-  workflow_dispatch: # 允许手动触发
+      - 'v*'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -17,12 +17,12 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3 # 更新到最新版本
+        uses: actions/checkout@v3
 
       - name: Set up Go
-        uses: actions/setup-go@v3 # 更新到最新版本
+        uses: actions/setup-go@v3
         with:
-          go-version: '1.21.1' # 使用 Go 1.21.1
+          go-version: '1.21.1'
 
       - name: Install xcaddy
         run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
@@ -261,7 +261,8 @@ jobs:
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ github.run_number }}
+          # tag_name: v${{ github.run_number }}
+          tag_name: caddy v2.8.4
           files: |
             ./caddy_linux_amd64
             ./caddy_linux_arm64
