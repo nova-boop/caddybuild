@@ -266,8 +266,7 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          # tag_name: v${{ github.run_number }} 
-          tag_name: caddy v2.8.4  ${{ env.DATE }}
+          tag_name: v${{ github.run_number }} caddy v2.8.4
           files: |
             ./caddy_linux_amd64
             ./caddy_linux_arm64
@@ -281,7 +280,7 @@ jobs:
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: caddy v2.8.4  ${{ env.DATE }}
+          tag_name: v${{ github.run_number }} caddy v2.8.4
           files: |
             ./caddy_linux_amd64
             ./caddy_linux_arm64
