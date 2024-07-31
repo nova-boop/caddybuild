@@ -261,6 +261,8 @@ jobs:
       - name: intEnv
         run: |
           echo "DATE=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
+          chmod +x ./caddy_linux_amd64
+          ./caddy_linux_amd64 list-modules > ./build-modules.info
           
       - name: Create Release
         id: create_release
@@ -268,6 +270,7 @@ jobs:
         with:
           tag_name: v${{ github.run_number }}
           files: |
+            ./build-modules.info
             ./caddy_linux_amd64
             ./caddy_linux_arm64
             ./caddy_linux_arm
@@ -282,6 +285,7 @@ jobs:
         with:
           tag_name: v${{ github.run_number }}
           files: |
+            ./build-modules.info
             ./caddy_linux_amd64
             ./caddy_linux_arm64
             ./caddy_linux_arm
