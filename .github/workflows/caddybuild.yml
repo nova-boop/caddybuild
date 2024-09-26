@@ -260,7 +260,7 @@ jobs:
 
       - name: intEnv
         run: |
-          echo "DATE=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
+          echo "DATE=$(date +"%Y-%m-%d-%H:%M:%S")" >> $GITHUB_ENV
           chmod +x ./caddy_linux_amd64
           ./caddy_linux_amd64 list-modules > ./build-modules.info
           
@@ -268,7 +268,7 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ github.run_number }}
+          tag_name: v2.8.4${{ env.DATE }}
           files: |
             ./build-modules.info
             ./caddy_linux_amd64
@@ -283,7 +283,7 @@ jobs:
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v2.8.4 ${{ env.DATE }}
+          tag_name: v2.8.4${{ env.DATE }}
           files: |
             ./build-modules.info
             ./caddy_linux_amd64
