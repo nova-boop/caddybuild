@@ -268,7 +268,7 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: caddy v2.8.4
+          tag_name: caddy-v2.8.4
           files: |
             ./build-modules.info
             ./caddy_linux_amd64
@@ -283,7 +283,7 @@ jobs:
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: caddy v2.8.4
+          tag_name: caddy-v2.8.4
           files: |
             ./build-modules.info
             ./caddy_linux_amd64
