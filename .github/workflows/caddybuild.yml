@@ -75,6 +75,7 @@ jobs:
               --with github.com/caddy-dns/powerdns \
               --with github.com/caddy-dns/tencentcloud \
               --with github.com/aksdb/caddy-cgi/v2 \
+              --with github.com/mholt/caddy-l4 \
               --with github.com/caddyserver/replace-response \
               --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive \
               --output ./caddy_linux_amd64
@@ -112,6 +113,7 @@ jobs:
               --with github.com/caddy-dns/powerdns \
               --with github.com/caddy-dns/tencentcloud \
               --with github.com/aksdb/caddy-cgi/v2 \
+              --with github.com/mholt/caddy-l4 \
               --with github.com/caddyserver/replace-response \
               --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive \
               --output ./caddy_linux_arm64
@@ -149,6 +151,7 @@ jobs:
               --with github.com/caddy-dns/powerdns \
               --with github.com/caddy-dns/tencentcloud \
               --with github.com/aksdb/caddy-cgi/v2 \
+              --with github.com/mholt/caddy-l4 \
               --with github.com/caddyserver/replace-response \
               --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive \
               --output ./caddy_linux_arm
@@ -186,6 +189,7 @@ jobs:
               --with github.com/caddy-dns/powerdns \
               --with github.com/caddy-dns/tencentcloud \
               --with github.com/aksdb/caddy-cgi/v2 \
+              --with github.com/mholt/caddy-l4 \
               --with github.com/caddyserver/replace-response \
               --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive \
               --output ./caddy_darwin_amd64
@@ -223,6 +227,7 @@ jobs:
               --with github.com/caddy-dns/powerdns \
               --with github.com/caddy-dns/tencentcloud \
               --with github.com/aksdb/caddy-cgi/v2 \
+              --with github.com/mholt/caddy-l4 \
               --with github.com/caddyserver/replace-response \
               --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive \
               --output ./caddy_darwin_arm64
@@ -260,6 +265,7 @@ jobs:
               --with github.com/caddy-dns/powerdns \
               --with github.com/caddy-dns/tencentcloud \
               --with github.com/aksdb/caddy-cgi/v2 \
+              --with github.com/mholt/caddy-l4 \
               --with github.com/caddyserver/replace-response \
               --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive \
               --output ./caddy_windows_amd64.exe
