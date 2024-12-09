@@ -1,0 +1,9 @@
+
+:8080 {
+        file_server browse {
+                root /srv
+                precompressed zstd br gzip
+        }
+}
+
+#import *.caddy
