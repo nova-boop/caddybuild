@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Check Server Performance
         run: |
@@ -69,7 +69,7 @@ jobs:
         run: |
           export GOOS=linux
           export GOARCH=amd64
-          xcaddy build v2.8.4 \
+          xcaddy build v2.9.1 \
               --with github.com/WeidiDeng/caddy-cloudflare-ip \
               --with github.com/mholt/caddy-grpc-web \
               --with github.com/greenpau/caddy-git \
@@ -107,7 +107,7 @@ jobs:
         run: |
           export GOOS=linux
           export GOARCH=arm64
-          xcaddy build v2.8.4 \
+          xcaddy build v2.9.1 \
               --with github.com/WeidiDeng/caddy-cloudflare-ip \
               --with github.com/mholt/caddy-grpc-web \
               --with github.com/greenpau/caddy-git \
@@ -145,7 +145,7 @@ jobs:
         run: |
           export GOOS=linux
           export GOARCH=arm
-          xcaddy build v2.8.4 \
+          xcaddy build v2.9.1 \
               --with github.com/WeidiDeng/caddy-cloudflare-ip \
               --with github.com/mholt/caddy-grpc-web \
               --with github.com/greenpau/caddy-git \
@@ -183,7 +183,7 @@ jobs:
         run: |
           export GOOS=darwin
           export GOARCH=amd64
-          xcaddy build v2.8.4 \
+          xcaddy build v2.9.1 \
               --with github.com/WeidiDeng/caddy-cloudflare-ip \
               --with github.com/mholt/caddy-grpc-web \
               --with github.com/greenpau/caddy-git \
@@ -221,7 +221,7 @@ jobs:
         run: |
           export GOOS=darwin
           export GOARCH=arm64
-          xcaddy build v2.8.4 \
+          xcaddy build v2.9.1 \
               --with github.com/WeidiDeng/caddy-cloudflare-ip \
               --with github.com/mholt/caddy-grpc-web \
               --with github.com/greenpau/caddy-git \
@@ -259,7 +259,7 @@ jobs:
         run: |
           export GOOS=windows
           export GOARCH=amd64
-          xcaddy build v2.8.4 \
+          xcaddy build v2.9.1 \
               --with github.com/WeidiDeng/caddy-cloudflare-ip \
               --with github.com/mholt/caddy-grpc-web \
               --with github.com/greenpau/caddy-git \
@@ -303,7 +303,7 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: caddy-v2.8.4
+          tag_name: caddy-v2.9.1
           files: |
             ./build-modules.info
             ./caddy_linux_amd64
@@ -318,7 +318,7 @@ jobs:
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: caddy-v2.8.4
+          tag_name: caddy-v2.9.1
           files: |
             ./build-modules.info
             ./caddy_linux_amd64
