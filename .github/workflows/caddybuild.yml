@@ -42,6 +42,21 @@ jobs:
       - name: Install xcaddy
         run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
 
+      - name: Initialize go.mod and pin dependencies
+        run: |
+          go mod init caddybuild
+          go get github.com/caddyserver/caddy/v2@v2.9.1
+          go get github.com/caddyserver/certmagic@v0.20.0
+          go get github.com/libdns/libdns@v0.2.1
+          go mod tidy
+
+      - name: Debug dependencies
+        run: |
+          go version
+          go env
+          go mod graph | grep libdns
+          go mod graph | grep certmagic
+          
       - name: Build Caddy for Linux amd64
         run: |
           export GOOS=linux
