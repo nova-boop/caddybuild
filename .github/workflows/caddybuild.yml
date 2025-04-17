@@ -41,6 +41,10 @@ jobs:
 
       - name: Install xcaddy
         run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
+      - name: Init
+        run: |
+          go get github.com/caddyserver/caddy/v2@latest
+          go get github.com/caddyserver/certmagic@v0.20.0  # 尝试使用较旧版本以避免不兼容
 
       - name: Build Caddy for Linux amd64
         run: |
