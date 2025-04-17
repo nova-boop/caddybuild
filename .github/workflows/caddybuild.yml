@@ -42,34 +42,34 @@ jobs:
       - name: Install xcaddy
         run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
 
-      - name: Initialize go.mod and pin dependencies
-        run: |
-          go mod init caddybuild
-          go get github.com/caddyserver/caddy/v2@v2.9.1
-          go get github.com/caddyserver/certmagic@v0.21.7
-          go get github.com/libdns/libdns@v0.2.3
-          go mod tidy
+      # - name: Initialize go.mod and pin dependencies
+      #   run: |
+      #     go mod init caddybuild
+      #     go get github.com/caddyserver/caddy/v2@v2.84
+      #     go get github.com/caddyserver/certmagic@v0.21.6
+      #     go get github.com/libdns/libdns@v0.2.3
+      #     go mod tidy
 
-      - name: Verify go.mod
-        run: |
-          cat go.mod
-          cat go.sum
-          go mod verify
+      # - name: Verify go.mod
+      #   run: |
+      #     cat go.mod
+      #     cat go.sum
+      #     go mod verify
 
-      - name: Debug dependencies
-        run: |
-          go version
-          go env
-          echo "libdns dependencies:"
-          go mod graph | grep libdns || echo "No libdns dependencies found"
-          echo "certmagic dependencies:"
-          go mod graph | grep certmagic || echo "No certmagic dependencies found"
+      # - name: Debug dependencies
+      #   run: |
+      #     go version
+      #     go env
+      #     echo "libdns dependencies:"
+      #     go mod graph | grep libdns || echo "No libdns dependencies found"
+      #     echo "certmagic dependencies:"
+      #     go mod graph | grep certmagic || echo "No certmagic dependencies found"
           
       - name: Build Caddy for Linux amd64
         run: |
           export GOOS=linux
           export GOARCH=amd64
-          xcaddy build v2.9.1 \
+          xcaddy build v2.8.4 \
               --with github.com/WeidiDeng/caddy-cloudflare-ip \
               --with github.com/mholt/caddy-grpc-web \
               --with github.com/greenpau/caddy-git \
@@ -107,7 +107,7 @@ jobs:
         run: |
           export GOOS=linux
           export GOARCH=arm64
-          xcaddy build v2.9.1 \
+          xcaddy build v2.8.4 \
               --with github.com/WeidiDeng/caddy-cloudflare-ip \
               --with github.com/mholt/caddy-grpc-web \
               --with github.com/greenpau/caddy-git \
@@ -145,7 +145,7 @@ jobs:
         run: |
           export GOOS=linux
           export GOARCH=arm
-          xcaddy build v2.9.1 \
+          xcaddy build v2.8.4 \
               --with github.com/WeidiDeng/caddy-cloudflare-ip \
               --with github.com/mholt/caddy-grpc-web \
               --with github.com/greenpau/caddy-git \
@@ -183,7 +183,7 @@ jobs:
         run: |
           export GOOS=darwin
           export GOARCH=amd64
-          xcaddy build v2.9.1 \
+          xcaddy build v2.8.4 \
               --with github.com/WeidiDeng/caddy-cloudflare-ip \
               --with github.com/mholt/caddy-grpc-web \
               --with github.com/greenpau/caddy-git \
@@ -221,7 +221,7 @@ jobs:
         run: |
           export GOOS=darwin
           export GOARCH=arm64
-          xcaddy build v2.9.1 \
+          xcaddy build v2.8.4 \
               --with github.com/WeidiDeng/caddy-cloudflare-ip \
               --with github.com/mholt/caddy-grpc-web \
               --with github.com/greenpau/caddy-git \
@@ -259,7 +259,7 @@ jobs:
         run: |
           export GOOS=windows
           export GOARCH=amd64
-          xcaddy build v2.9.1 \
+          xcaddy build v2.8.4 \
               --with github.com/WeidiDeng/caddy-cloudflare-ip \
               --with github.com/mholt/caddy-grpc-web \
               --with github.com/greenpau/caddy-git \
@@ -303,7 +303,7 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: caddy-v2.9.1
+          tag_name: caddy-v2.8.4
           files: |
             ./build-modules.info
             ./caddy_linux_amd64
@@ -318,7 +318,7 @@ jobs:
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: caddy-v2.9.1
+          tag_name: caddy-v2.8.4
           files: |
             ./build-modules.info
             ./caddy_linux_amd64
