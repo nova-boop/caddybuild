@@ -46,8 +46,8 @@ jobs:
         run: |
           go mod init caddybuild
           go get github.com/caddyserver/caddy/v2@v2.9.1
-          go get github.com/caddyserver/certmagic@v0.20.0
-          go get github.com/libdns/libdns@v0.2.1
+          go get github.com/caddyserver/certmagic@v0.21.6
+          go get github.com/libdns/libdns@v0.2.3
           go mod tidy
 
       - name: Debug dependencies
