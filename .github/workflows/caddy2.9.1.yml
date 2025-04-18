@@ -52,21 +52,59 @@ jobs:
           export GOARCH=amd64
           xcaddy build $build_version $build_config --output ./build_caddy/caddy_linux_amd64
 
+      - name: Build Caddy for Linux arm64
+        run: |
+          export GOOS=linux
+          export GOARCH=arm64
+          xcaddy build $build_version $build_config --output ./build_caddy/caddy_linux_arm64
+
+      - name: Build Caddy for Linux arm
+        run: |
+          export GOOS=linux
+          export GOARCH=arm
+          xcaddy build $build_version $build_config --output ./build_caddy/caddy_linux_arm
+
+      - name: Build Caddy for macOS amd64
+        run: |
+          export GOOS=darwin
+          export GOARCH=amd64
+          xcaddy build $build_version $build_config --output ./build_caddy/caddy_darwin_amd64
+
+      - name: Build Caddy for macOS arm64
+        run: |
+          export GOOS=darwin
+          export GOARCH=arm64
+          xcaddy build $build_version $build_config --output ./build_caddy/caddy_darwin_arm64
+
+      - name: Build Caddy for Windows amd64
+        run: |
+          export GOOS=windows
+          export GOARCH=amd64
+          xcaddy build $build_version $build_config --output ./build_caddy/caddy_windows_amd64.exe
+
       - name: intEnv
         run: |
           echo "DATE=$(date +"%Y-%m-%d_%H:%M:%S")" >> $GITHUB_ENV
           chmod +x ./build_caddy/caddy_linux_amd64
-          ./build_caddy/caddy_linux_amd64 list-modules > ./build-modules.info
+          ./build_caddy/caddy_linux_amd64 list-modules > ./build_caddy/build-modules.info
           cd ./build_caddy/
           echo "FIRMWARE_PATH=$PWD" >> $GITHUB_ENV
           
-      - name: Upload Firmware To Release
-        if: steps.compile.outputs.status == 'success'
-        uses: ncipollo/release-action@v1
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
         with:
-          name: caddy v2  ${{ env.build_version }} version
-          allowUpdates: true
-          token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: ${{ env.FIRMWARE_PATH }}/*
-          body: |
-            **This is xcaddy build ${{ env.build_version }}**
+          tag_name: caddy-${{ env.build_version }}
+          files: |
+            ./build_caddy/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: caddy-${{ env.build_version }}
+          files: |
+            ./build_caddy/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
