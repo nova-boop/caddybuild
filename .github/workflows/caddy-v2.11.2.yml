@@ -45,19 +45,31 @@ jobs:
 
       - name: Install xcaddy
         run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
-          
+
+      - name: Install Android NDK for ARMv7
+        run: |
+          NDK_ZIP=android-ndk-${ANDROID_NDK_VERSION}-linux.zip
+          wget -q https://dl.google.com/android/repository/$NDK_ZIP
+          unzip -q $NDK_ZIP -d $HOME/android-ndk
+          mv $HOME/android-ndk/android-ndk-${ANDROID_NDK_VERSION} $HOME/android-ndk/ndk
+          echo "ANDROID_NDK_HOME=$HOME/android-ndk/ndk" >> $GITHUB_ENV
+          echo "PATH=$HOME/android-ndk/ndk/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH" >> $GITHUB_ENV
+    
+      - name: Build Caddy for Android v7 (armv7)
+        env:
+          GOOS: android
+          GOARCH: arm
+          GOARM: 7
+          CGO\_ENABLED: 1
+          CC: ${{ env.ANDROID_NDK_HOME }}/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi${{ env.ANDROID_API_LEVEL }}-clang
+        run: |
+          xcaddy build $build_version $build_config --output ./build_caddy/caddy_android_arm
+
       - name: Build Caddy for Android arm64/aarch64
         run: |
           export GOOS=android
           export GOARCH=arm64
           xcaddy build $build_version $build_config --output ./build_caddy/caddy_android_arm64
-
-      - name: Build Caddy for Android v7
-        run: |
-          export GOOS=android
-          export GOARCH=arm
-          export GOARM=7
-          xcaddy build $build_version $build_config --output ./build_caddy/caddy_android_arm
 
       - name: Build Caddy for Linux arm64
         run: |
