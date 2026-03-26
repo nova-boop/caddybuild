@@ -52,11 +52,11 @@ jobs:
           export GOARCH=arm64
           xcaddy build $build_version $build_config --output ./build_caddy/caddy_android_arm64
 
-      - name: Build Caddy for Linux arm64
+      - name: Build Caddy for Linux amd64
         run: |
           export GOOS=linux
-          export GOARCH=arm64
-          xcaddy build $build_version $build_config --output ./build_caddy/caddy_linux_arm64
+          export GOARCH=amd64
+          xcaddy build $build_version $build_config --output ./build_caddy/caddy_linux_amd64
           
       - name: Build Caddy for Linux arm64
         run: |
