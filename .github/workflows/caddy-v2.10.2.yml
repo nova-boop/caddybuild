@@ -1,4 +1,4 @@
-name: Build and Release Caddy v2.10.2
+name: Build and Release Caddy v2.11.2
 
 on:
   #schedule:
@@ -9,8 +9,8 @@ on:
   workflow_dispatch:
 
 env:
-  build_version: v2.10.2
-  build_config:  --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/mholt/caddy-grpc-web --with github.com/greenpau/caddy-git@v1.0.9 --with github.com/mholt/caddy-webdav --with github.com/WingLim/caddy-webhook@v1.0.8 --with github.com/mholt/caddy-ratelimit --with github.com/caddyserver/ntlm-transport@v0.1.2 --with github.com/lolPants/caddy-requestid@v1.1.2 --with github.com/sjtug/caddy2-filter --with github.com/chukmunnlee/caddy-openapi@v0.11.0 --with github.com/ggicci/caddy-jwt@v1.1.0 --with github.com/caddy-dns/cloudflare --with github.com/libdns/cloudflare@v0.2.1 --with github.com/caddy-dns/route53@v1.6.0 --with github.com/caddy-dns/duckdns@v0.5.0 --with github.com/geminiwen/dnspod --with github.com/caddy-dns/digitalocean --with github.com/caddy-dns/alidns@v1.0.26 --with github.com/caddy-dns/godaddy@v1.1.1 --with github.com/caddy-dns/vultr --with github.com/caddy-dns/googleclouddns@v1.1.0 --with github.com/caddy-dns/ovh@v1.1.0 --with github.com/caddy-dns/metaname@v0.3.1 --with github.com/caddy-dns/ddnss --with github.com/caddy-dns/powerdns@v0.1.4 --with github.com/caddy-dns/tencentcloud@v0.4.2 --with github.com/aksdb/caddy-cgi@v2.2.6 --with github.com/mholt/caddy-l4 --with github.com/caddyserver/replace-response --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive 
+  build_version: v2.11.2
+  build_config:   --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/mholt/caddy-grpc-web --with github.com/greenpau/caddy-git@v1.0.9 --with github.com/mholt/caddy-webdav --with github.com/WingLim/caddy-webhook@v1.0.8 --with github.com/mholt/caddy-ratelimit --with github.com/lolPants/caddy-requestid@v1.1.2 --with github.com/sjtug/caddy2-filter --with github.com/chukmunnlee/caddy-openapi@v0.11.0 --with github.com/ggicci/caddy-jwt@v1.1.2 --with github.com/caddy-dns/cloudflare@v0.2.4 --with github.com/caddy-dns/route53@v1.6.0 --with github.com/caddy-dns/duckdns --with github.com/caddy-dns/digitalocean --with github.com/caddy-dns/alidns --with github.com/caddy-dns/godaddy --with github.com/caddy-dns/vultr --with github.com/caddy-dns/googleclouddns --with github.com/caddy-dns/ovh --with github.com/caddy-dns/metaname --with github.com/caddy-dns/powerdns --with github.com/caddy-dns/tencentcloud --with github.com/aksdb/caddy-cgi@v2.2.7 --with github.com/mholt/caddy-l4 --with github.com/caddyserver/replace-response --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive
 
 permissions:
   contents: write
@@ -41,7 +41,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: '1.25.5'
+          go-version: '1.26.1'
 
       - name: Install xcaddy
         run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
