@@ -9,8 +9,6 @@ on:
   workflow_dispatch:
 
 env:
-  ANDROID_NDK_VERSION: r25b
-  ANDROID_API_LEVEL: 21
   build_version: v2.11.2
   build_config:   --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/mholt/caddy-grpc-web --with github.com/greenpau/caddy-git@v1.0.9 --with github.com/mholt/caddy-webdav --with github.com/WingLim/caddy-webhook@v1.0.8 --with github.com/mholt/caddy-ratelimit --with github.com/lolPants/caddy-requestid@v1.1.2 --with github.com/sjtug/caddy2-filter --with github.com/chukmunnlee/caddy-openapi@v0.11.0 --with github.com/ggicci/caddy-jwt@v1.1.2 --with github.com/caddy-dns/cloudflare@v0.2.4 --with github.com/caddy-dns/route53@v1.6.0 --with github.com/caddy-dns/duckdns --with github.com/caddy-dns/digitalocean --with github.com/caddy-dns/alidns --with github.com/caddy-dns/godaddy --with github.com/caddy-dns/vultr --with github.com/caddy-dns/googleclouddns --with github.com/caddy-dns/ovh --with github.com/caddy-dns/metaname --with github.com/caddy-dns/powerdns --with github.com/caddy-dns/tencentcloud --with github.com/aksdb/caddy-cgi@v2.2.7 --with github.com/mholt/caddy-l4 --with github.com/caddyserver/replace-response --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive
 
@@ -47,25 +45,6 @@ jobs:
 
       - name: Install xcaddy
         run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
-
-      - name: Install Android NDK for ARMv7
-        run: |
-          NDK_ZIP=android-ndk-${ANDROID_NDK_VERSION}-linux.zip
-          wget -q https://dl.google.com/android/repository/$NDK_ZIP
-          unzip -q $NDK_ZIP -d $HOME/android-ndk
-          mv $HOME/android-ndk/android-ndk-${ANDROID_NDK_VERSION} $HOME/android-ndk/ndk
-          echo "ANDROID_NDK_HOME=$HOME/android-ndk/ndk" >> $GITHUB_ENV
-          echo "PATH=$HOME/android-ndk/ndk/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH" >> $GITHUB_ENV
-    
-      - name: Build Caddy for Android v7 (armv7)
-        env:
-          GOOS: android
-          GOARCH: arm
-          GOARM: 7
-          CGO\_ENABLED: 1
-          CC: ${{ env.ANDROID_NDK_HOME }}/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi${{ env.ANDROID_API_LEVEL }}-clang
-        run: |
-          xcaddy build $build_version $build_config --output ./build_caddy/caddy_android_arm
 
       - name: Build Caddy for Android arm64/aarch64
         run: |
