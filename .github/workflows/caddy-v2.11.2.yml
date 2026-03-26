@@ -46,12 +46,25 @@ jobs:
       - name: Install xcaddy
         run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
           
-      - name: Build Caddy for Linux amd64
+      - name: Build Caddy for Android arm64/aarch64
+        run: |
+          export GOOS=android
+          export GOARCH=arm64
+          xcaddy build $build_version $build_config --output ./build_caddy/caddy_android_arm64
+
+      - name: Build Caddy for Android v7
+        run: |
+          export GOOS=android
+          export GOARCH=arm
+          export GOARM=7
+          xcaddy build $build_version $build_config --output ./build_caddy/caddy_android_arm
+
+      - name: Build Caddy for Linux arm64
         run: |
           export GOOS=linux
-          export GOARCH=amd64
-          xcaddy build $build_version $build_config --output ./build_caddy/caddy_linux_amd64
-
+          export GOARCH=arm64
+          xcaddy build $build_version $build_config --output ./build_caddy/caddy_linux_arm64
+          
       - name: Build Caddy for Linux arm64
         run: |
           export GOOS=linux
