@@ -9,8 +9,12 @@ on:
   workflow_dispatch:
 
 env:
-  build_version: Caddy_Basic_v2.11.2
-  build_config:   --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/mholt/caddy-grpc-web --with github.com/caddy-dns/cloudflare@v0.2.4 --with github.com/caddy-dns/alidns --with github.com/caddy-dns/tencentcloud 
+  build_version: v2.11.2
+  build_config:   --with github.com/WeidiDeng/caddy-cloudflare-ip \
+    --with github.com/mholt/caddy-grpc-web \
+    --with github.com/caddy-dns/cloudflare \
+    --with github.com/caddy-dns/alidns \
+    --with github.com/caddy-dns/tencentcloud \
 
 permissions:
   contents: write
@@ -100,7 +104,7 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: caddy-${{ env.build_version }}
+          tag_name: caddy-basic-${{ env.build_version }}
           files: |
             ./build_caddy/*
         env:
@@ -109,7 +113,7 @@ jobs:
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: caddy-${{ env.build_version }}
+          tag_name: caddy-basic-${{ env.build_version }}
           files: |
             ./build_caddy/*
         env:
