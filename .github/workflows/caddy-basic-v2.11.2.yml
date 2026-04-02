@@ -10,11 +10,7 @@ on:
 
 env:
   build_version: v2.11.2
-  build_config:   --with github.com/WeidiDeng/caddy-cloudflare-ip \
-    --with github.com/mholt/caddy-grpc-web \
-    --with github.com/caddy-dns/cloudflare \
-    --with github.com/caddy-dns/alidns \
-    --with github.com/caddy-dns/tencentcloud \
+  build_config:   --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/mholt/caddy-grpc-web --with github.com/caddy-dns/cloudflare --with github.com/caddy-dns/alidns --with github.com/caddy-dns/tencentcloud
 
 permissions:
   contents: write
