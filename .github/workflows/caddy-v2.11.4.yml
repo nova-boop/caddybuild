@@ -10,7 +10,7 @@ on:
 
 env:
   build_version: v2.11.4
-  build_config:  --with github.com/caddyserver/transform-encoder --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/mholt/caddy-grpc-web --with github.com/greenpau/caddy-git@v1.0.9 --with github.com/mholt/caddy-webdav --with github.com/WingLim/caddy-webhook@v1.0.8 --with github.com/mholt/caddy-ratelimit --with github.com/lolPants/caddy-requestid@v1.1.2 --with github.com/sjtug/caddy2-filter --with github.com/chukmunnlee/caddy-openapi@v0.11.0 --with github.com/ggicci/caddy-jwt@v1.1.2 --with github.com/caddy-dns/cloudflare@v0.2.4 --with github.com/caddy-dns/route53@v1.6.0 --with github.com/caddy-dns/duckdns --with github.com/caddy-dns/digitalocean --with github.com/caddy-dns/alidns --with github.com/caddy-dns/godaddy --with github.com/caddy-dns/vultr --with github.com/caddy-dns/googleclouddns --with github.com/caddy-dns/ovh --with github.com/caddy-dns/metaname --with github.com/caddy-dns/powerdns --with github.com/caddy-dns/tencentcloud --with github.com/aksdb/caddy-cgi@v2.2.7 --with github.com/mholt/caddy-l4 --with github.com/caddyserver/replace-response --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive
+  build_config:   --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/mholt/caddy-grpc-web --with github.com/greenpau/caddy-git@v1.0.9 --with github.com/mholt/caddy-webdav --with github.com/WingLim/caddy-webhook@v1.0.8 --with github.com/mholt/caddy-ratelimit --with github.com/lolPants/caddy-requestid@v1.1.2 --with github.com/sjtug/caddy2-filter --with github.com/chukmunnlee/caddy-openapi@v0.11.0 --with github.com/ggicci/caddy-jwt@v1.1.2 --with github.com/caddy-dns/cloudflare@v0.2.4 --with github.com/caddy-dns/route53@v1.6.0 --with github.com/caddy-dns/duckdns --with github.com/caddy-dns/digitalocean --with github.com/caddy-dns/alidns --with github.com/caddy-dns/godaddy --with github.com/caddy-dns/vultr --with github.com/caddy-dns/googleclouddns --with github.com/caddy-dns/ovh --with github.com/caddy-dns/metaname --with github.com/caddy-dns/powerdns --with github.com/caddy-dns/tencentcloud --with github.com/aksdb/caddy-cgi@v2.2.7 --with github.com/mholt/caddy-l4 --with github.com/caddyserver/replace-response --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive
 
 permissions:
   contents: write
@@ -51,7 +51,6 @@ jobs:
           export GOOS=android
           export GOARCH=arm64
           xcaddy build $build_version $build_config --output ./build_caddy/caddy_android_arm64
-
       - name: Build Caddy for Linux amd64
         run: |
           export GOOS=linux
@@ -63,31 +62,26 @@ jobs:
           export GOOS=linux
           export GOARCH=arm64
           xcaddy build $build_version $build_config --output ./build_caddy/caddy_linux_arm64
-
       - name: Build Caddy for Linux arm
         run: |
           export GOOS=linux
           export GOARCH=arm
           xcaddy build $build_version $build_config --output ./build_caddy/caddy_linux_arm
-
       - name: Build Caddy for macOS amd64
         run: |
           export GOOS=darwin
           export GOARCH=amd64
           xcaddy build $build_version $build_config --output ./build_caddy/caddy_darwin_amd64
-
       - name: Build Caddy for macOS arm64
         run: |
           export GOOS=darwin
           export GOARCH=arm64
           xcaddy build $build_version $build_config --output ./build_caddy/caddy_darwin_arm64
-
       - name: Build Caddy for Windows amd64
         run: |
           export GOOS=windows
           export GOARCH=amd64
           xcaddy build $build_version $build_config --output ./build_caddy/caddy_windows_amd64.exe
-
       - name: intEnv
         run: |
           echo "DATE=$(date +"%Y-%m-%d_%H:%M:%S")" >> $GITHUB_ENV
