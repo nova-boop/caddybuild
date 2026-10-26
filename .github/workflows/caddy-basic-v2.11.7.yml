@@ -1,4 +1,4 @@
-name: Build and Release Caddy Basic v2.11.4
+name: Build and Release Caddy Basic v2.11.7
 
 on:
   #schedule:
@@ -9,8 +9,8 @@ on:
   workflow_dispatch:
 
 env:
-  build_version: v2.11.4
-  build_config:   --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/mholt/caddy-grpc-web --with github.com/caddy-dns/cloudflare --with github.com/caddy-dns/alidns --with github.com/caddy-dns/tencentcloud
+  build_version: v2.11.7
+  build_config:   --with github.com/caddyserver/transform-encoder --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/mholt/caddy-grpc-web --with github.com/caddy-dns/cloudflare --with github.com/caddy-dns/alidns --with github.com/caddy-dns/tencentcloud
 
 permissions:
   contents: write
