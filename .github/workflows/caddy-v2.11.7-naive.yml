@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  build_version: v2.11.7-naive
+  build_version: v2.11.7
   caddy_src: ${{ github.workspace }}/caddy_src
   build_config:    --with github.com/caddyserver/transform-encoder --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/mholt/caddy-grpc-web --with github.com/mholt/caddy-webdav --with github.com/mholt/caddy-ratelimit --with github.com/sjtug/caddy2-filter --with github.com/ggicci/caddy-jwt@v1.4.0 --with github.com/caddy-dns/duckdns --with github.com/caddy-dns/digitalocean --with github.com/caddy-dns/alidns --with github.com/caddy-dns/godaddy --with github.com/caddy-dns/vultr --with github.com/caddy-dns/googleclouddns --with github.com/caddy-dns/ovh --with github.com/caddy-dns/metaname --with github.com/caddy-dns/powerdns --with github.com/caddy-dns/tencentcloud --with github.com/caddy-dns/cloudflare@v0.2.4 --with github.com/caddy-dns/route53@v1.6.2 --with github.com/aksdb/caddy-cgi@v2.2.7 --with github.com/lolPants/caddy-requestid@v1.1.2 --with github.com/greenpau/caddy-git@v1.0.9 --with github.com/WingLim/caddy-webhook@v1.0.8 --with github.com/chukmunnlee/caddy-openapi@v0.11.0 --with github.com/mholt/caddy-l4 --with github.com/caddyserver/replace-response --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive
   replace_caddy:   --replace github.com/caddyserver/caddy/v2=${{ github.workspace }}/caddy_src
@@ -111,7 +111,7 @@ jobs:
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: caddy-${{ env.build_version }}
+          tag_name: caddy-${{ env.build_version }}-naive
           files: |
             ./build_caddy/*
         env:
