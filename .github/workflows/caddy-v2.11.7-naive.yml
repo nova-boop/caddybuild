@@ -52,7 +52,10 @@ jobs:
       - name: Prepare patched Caddy source
         run: |
           git clone --depth 1 --branch ${{ env.build_version }} https://github.com/caddyserver/caddy.git "${{ env.caddy_src }}"
-          # 修复点：打补丁时必须指向绝对路径（github.workspace）
+
+          curl -sLo "${{ github.workspace }}/caddy-read-idle-timeout.patch" "https://raw.githubusercontent.com/klzgrad/forwardproxy/naive/caddy-read-idle-timeout.patch"
+          curl -sLo "${{ github.workspace }}/caddy-sing-quic-bbrv1.patch" "https://raw.githubusercontent.com/klzgrad/forwardproxy/naive/caddy-sing-quic-bbrv1.patch"
+          
           git -C "${{ env.caddy_src }}" apply "${{ github.workspace }}/caddy-read-idle-timeout.patch"
           git -C "${{ env.caddy_src }}" apply "${{ github.workspace }}/caddy-sing-quic-bbrv1.patch"
 
