@@ -112,7 +112,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: caddy-${{ env.build_version }}
+          tag_name: caddy-${{ env.build_version }}-naive
           files: |
             ./build_caddy/*
         env:
