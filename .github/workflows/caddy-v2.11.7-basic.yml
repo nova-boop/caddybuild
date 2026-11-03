@@ -11,14 +11,14 @@ on:
 env:
   build_version: v2.11.7
   build_config:   >
-    --with github.com/caddyserver/transform-encoder
-    --with github.com/WeidiDeng/caddy-cloudflare-ip
-    --with github.com/mholt/caddy-grpc-web
-    --with github.com/caddy-dns/cloudflare
-    --with github.com/caddy-dns/alidns
-    --with github.com/caddy-dns/tencentcloud
-    --with github.com/mholt/caddy-14
-    --with github.com/aksdb/caddy-cgi@v2.2.7
+    --with github.com/caddyserver/transform-encoder 
+    --with github.com/WeidiDeng/caddy-cloudflare-ip 
+    --with github.com/mholt/caddy-grpc-web 
+    --with github.com/caddy-dns/cloudflare 
+    --with github.com/caddy-dns/alidns 
+    --with github.com/caddy-dns/tencentcloud 
+    --with github.com/mholt/caddy-l4 
+    --with github.com/aksdb/caddy-cgi@v2.2.7 
 
 permissions:
   contents: write
