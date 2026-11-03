@@ -11,7 +11,7 @@ on:
 env:
   build_version: v2.11.7
   caddy_src: ${{ github.workspace }}/caddy_src
-  build_config:  >
+  build_config: >-
     --with github.com/caddyserver/transform-encoder 
     --with github.com/WeidiDeng/caddy-cloudflare-ip 
     --with github.com/mholt/caddy-grpc-web 
